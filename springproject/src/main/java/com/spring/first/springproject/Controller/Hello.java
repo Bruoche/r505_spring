@@ -1,11 +1,11 @@
-package com.spring.first.springproject;
-import org.springframework.web.bind.annotation.RequestMapping;
+package com.spring.first.springproject.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Hello {
     
-    @RequestMapping(value="/bonjour")
+    @GetMapping(path="bonjour")
     public static String helloWorld() {
         return "Bonjour le monde !";
     }
