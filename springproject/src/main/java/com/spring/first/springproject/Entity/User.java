@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
-
 @Data
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
@@ -15,4 +14,6 @@ public class User {
   private Integer id;
   private String name;
   private String email;
+  private String mot_de_passe;
+  private String role;
 }
