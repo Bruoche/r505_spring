@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
@@ -16,6 +17,7 @@ public class Article {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
   private Date date_publication;
-  private String auteur;
+  @ManyToOne
+  private User auteur;
   private String contenu;
 }

@@ -14,21 +14,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.first.springproject.Entity.Article;
+import com.spring.first.springproject.Entity.User;
 import com.spring.first.springproject.Repository.ArticleRepository;
+import com.spring.first.springproject.Repository.UserRepository;
 
 @Controller
 @RequestMapping(path="/article")
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
+    private UserRepository userRepository;
 
     @PostMapping(path="/add")
     public @ResponseBody String addNewArticle (
-        @RequestParam String auteur,
+        @RequestParam Integer auteurId,
         @RequestParam String contenu,
         @RequestParam Date datePublication
     ) {
         Article n = new Article();
+        User auteur = userRepository.findById(auteurId).get();
         n.setAuteur(auteur);
         n.setContenu(contenu);
         n.setDate_publication(datePublication);
@@ -39,11 +43,12 @@ public class ArticleController {
     @PutMapping(path="/update/{id}")
     public @ResponseBody String updateArticle (
         @PathVariable Integer id,
-        @RequestParam String auteur,
+        @RequestParam Integer auteurId,
         @RequestParam String contenu,
         @RequestParam Date datePublication
     ) {
         Article n = articleRepository.findById(id).get();
+        User auteur = userRepository.findById(auteurId).get();
         n.setAuteur(auteur);
         n.setContenu(contenu);
         n.setDate_publication(datePublication);
@@ -63,8 +68,9 @@ public class ArticleController {
         return articleRepository.findAll();
     }
 
-    @GetMapping(path="/user/{auteur}")
-    public @ResponseBody Iterable<Article> getArticleFromAuteur(String auteur) {
+    @GetMapping(path="/user/{auteurId}")
+    public @ResponseBody Iterable<Article> getArticleFromAuteur(Integer auteurId) {
+        User auteur = userRepository.findById(auteurId).get();
         return articleRepository.findByAuteur(auteur);
     }
 }
