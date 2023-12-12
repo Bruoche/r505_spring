@@ -23,19 +23,19 @@ import com.spring.first.springproject.Repository.UserRepository;
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
     private UserRepository userRepository;
 
     @PostMapping(path="/add")
     public @ResponseBody String addNewArticle (
         @RequestParam Integer auteurId,
-        @RequestParam String contenu,
-        @RequestParam Date datePublication
+        @RequestParam String contenu
     ) {
         Article n = new Article();
         User auteur = userRepository.findById(auteurId).get();
         n.setAuteur(auteur);
         n.setContenu(contenu);
-        n.setDate_publication(datePublication);
+        n.setDate_publication(new Date());
         articleRepository.save(n);
         return "Saved";
     }
@@ -44,14 +44,12 @@ public class ArticleController {
     public @ResponseBody String updateArticle (
         @PathVariable Integer id,
         @RequestParam Integer auteurId,
-        @RequestParam String contenu,
-        @RequestParam Date datePublication
+        @RequestParam String contenu
     ) {
         Article n = articleRepository.findById(id).get();
         User auteur = userRepository.findById(auteurId).get();
         n.setAuteur(auteur);
         n.setContenu(contenu);
-        n.setDate_publication(datePublication);
         articleRepository.save(n);
         return "Modified";
     }
