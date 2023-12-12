@@ -3,6 +3,8 @@ package com.spring.first.springproject.Controller;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +54,60 @@ public class ArticleController {
         n.setContenu(contenu);
         articleRepository.save(n);
         return "Modified";
+    }
+
+    @PutMapping(path="like/{id}/{userId}")
+    public @ResponseBody ResponseEntity<String> likeArticle (
+        @PathVariable Integer id,
+        @PathVariable Integer userId
+    ) {
+        Article article = articleRepository.findById(id).get();
+        User user = userRepository.findById(userId).get();
+        if (article.getLikes().contains(user)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The article have already been liked by this user.");
+        }
+        if (article.getDislikes().contains(user)) {
+            article.getDislikes().remove(user);
+        }
+        article.getLikes().add(user);
+        articleRepository.save(article);
+        return ResponseEntity.ok().body("Liked");
+    }
+
+    @PutMapping(path="dislike/{id}/{userId}")
+    public @ResponseBody ResponseEntity<String> dislikeArticle (
+        @PathVariable Integer id,
+        @PathVariable Integer userId
+    ) {
+        Article article = articleRepository.findById(id).get();
+        User user = userRepository.findById(userId).get();
+        if (article.getDislikes().contains(user)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("The article have already been disliked by this user.");
+        }
+        if (article.getLikes().contains(user)) {
+            article.getLikes().remove(user);
+        }
+        article.getDislikes().add(user);
+        articleRepository.save(article);
+        return ResponseEntity.ok().body("Disliked");
+    }
+
+
+    @PutMapping(path="unlike/{id}/{userId}")
+    public @ResponseBody ResponseEntity<String> unlikeArticle (
+        @PathVariable Integer id,
+        @PathVariable Integer userId
+    ) {
+        Article article = articleRepository.findById(id).get();
+        User user = userRepository.findById(userId).get();
+        if (article.getDislikes().contains(user)) {
+            article.getDislikes().remove(user);
+        }
+        if (article.getLikes().contains(user)) {
+            article.getLikes().remove(user);
+        }
+        articleRepository.save(article);
+        return ResponseEntity.ok().body("Unliked");
     }
 
     @DeleteMapping(path="/delete/{id}")
